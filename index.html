@@ -23,6 +23,12 @@
       z-index: 100; 
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
+    .header-top { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: start; 
+      gap: 2rem;
+    }
     .header h1 { 
       font-size: 22px; 
       font-weight: 600; 
@@ -33,12 +39,6 @@
       font-size: 13px; 
       color: #666; 
       margin: 0; 
-    }
-    .header-top { 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: start; 
-      gap: 2rem;
     }
     .header-right { 
       display: flex; 
@@ -64,7 +64,7 @@
       min-width: 200px;
     }
     .container { 
-      max-width: 1200px; 
+      max-width: 1400px; 
       margin: 0 auto; 
       padding: 2rem 1rem; 
       width: 100%; 
@@ -128,8 +128,8 @@
       background: #ffffff; 
       border: 1px solid #e0e0e0; 
       border-radius: 8px; 
-      padding: 1.25rem; 
-      margin-bottom: 12px;
+      padding: 1.5rem; 
+      margin-bottom: 16px;
     }
     .project-header { 
       display: flex; 
@@ -165,24 +165,50 @@
       background: #fef3c7; 
       color: #b45309; 
     }
-    .project-metrics { 
+    .metrics-row { 
       display: grid; 
-      grid-template-columns: 1fr 1fr; 
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
       gap: 12px; 
-      margin-bottom: 1rem; 
+      margin-bottom: 1rem;
     }
-    .metric-row p { 
-      font-size: 12px; 
-      color: #666; 
-      margin: 0 0 0.25rem 0; 
+    .metric-field {
+      background: #f9f9f9;
+      padding: 12px;
+      border-radius: 6px;
+      border-left: 3px solid #e0e0e0;
     }
-    .metric-row .value { 
-      font-size: 15px; 
-      font-weight: 600; 
-      margin: 0; 
-      color: #1a1a1a; 
+    .metric-field.great{
+      border-left-color: #16a34a;
+      background: #f0fdf4;
     }
-    .metric-row .success { color: #16a34a; }
+    .metric-field.good{
+      border-left-color: #2563eb;
+      background: #eff6ff;
+    }
+    .metric-field.average{
+      border-left-color: #f59e0b;
+      background: #fffbeb;
+    }
+    .metric-field.problematic{
+      border-left-color: #dc2626;
+      background: #fef2f2;
+    }
+    .metric-field-label{
+      font-size: 11px;
+      color: #666;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .metric-field-value{
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0;
+    }
+    .metric-field.great .metric-field-value { color: #16a34a; }
+    .metric-field.good .metric-field-value { color: #2563eb; }
+    .metric-field.average .metric-field-value { color: #f59e0b; }
+    .metric-field.problematic .metric-field-value { color: #dc2626; }
     .progress-bar { 
       background: #f0f0f0; 
       height: 8px; 
@@ -198,7 +224,46 @@
     .project-footer { 
       font-size: 12px; 
       color: #999; 
-      margin: 0; 
+      margin: 0;
+    }
+    .action-buttons{
+      display: flex;
+      gap: 8px;
+      margin-top: 1rem;
+    }
+    .btn { 
+      padding: 10px 20px; 
+      background: #f0f0f0; 
+      border: 1px solid #e0e0e0; 
+      border-radius: 4px; 
+      color: #1a1a1a; 
+      font-size: 14px; 
+      font-weight: 600; 
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn:hover { background: #e0e0e0; }
+    .btn-primary { 
+      background: #2563eb; 
+      color: #ffffff; 
+      border: none; 
+    }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-small{
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+    .btn-danger{
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+    .btn-danger:hover{
+      background: #fecaca;
+    }
+    .btn-secondary{
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
     }
     .form-group { 
       margin-bottom: 1.5rem; 
@@ -222,7 +287,7 @@
     }
     .form-group input:focus,
     .form-group select:focus,
-    .form-group textarea:focus {
+    .form-group textarea:focus{
       outline: none;
       border-color: #2563eb;
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
@@ -231,27 +296,53 @@
       min-height: 80px; 
       resize: vertical; 
     }
-    .btn { 
-      padding: 10px 20px; 
-      background: #f0f0f0; 
-      border: 1px solid #e0e0e0; 
-      border-radius: 4px; 
-      color: #1a1a1a; 
-      font-size: 14px; 
-      font-weight: 600; 
+    .input-row { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 12px; 
+    }
+    .input-row .form-group { margin: 0; }
+    .modal{
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal.active{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content{
+      background-color: #fefefe;
+      padding: 2rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-header{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .modal-header h2{
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+    }
+    .close-btn{
+      background: none;
+      border: none;
+      font-size: 24px;
       cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn:hover { background: #e0e0e0; }
-    .btn-primary { 
-      background: #2563eb; 
-      color: #ffffff; 
-      border: none; 
-    }
-    .btn-primary:hover { background: #1d4ed8; }
-    .btn-secondary { 
-      background: #f9f9f9; 
-      border: 1px solid #e0e0e0;
+      color: #666;
     }
     .insight-card { 
       background: #ffffff; 
@@ -270,35 +361,6 @@
       margin: 0; 
       color: #1a1a1a; 
       line-height: 1.5;
-    }
-    .input-row { 
-      display: grid; 
-      grid-template-columns: 1fr 1fr; 
-      gap: 12px; 
-    }
-    .input-row .form-group { margin: 0; }
-    .chart-container { 
-      position: relative; 
-      width: 100%; 
-      height: 300px; 
-      margin: 1.5rem 0; 
-    }
-    .action-buttons {
-      display: flex;
-      gap: 8px;
-      margin-top: 1rem;
-    }
-    .btn-small {
-      padding: 6px 12px;
-      font-size: 12px;
-    }
-    .btn-danger {
-      background: #fee2e2;
-      color: #991b1b;
-      border: 1px solid #fecaca;
-    }
-    .btn-danger:hover {
-      background: #fecaca;
     }
     @media (max-width: 768px) {
       .input-row {
@@ -327,7 +389,7 @@
     <div class="header-top">
       <div>
         <h1>Value Realisation Hub</h1>
-        <p>Track quantifiable and qualitative value across your AI consulting projects</p>
+        <p>Track Value Added, Cost Saved, User Feedback, and Adoption across your AI consulting projects</p>
       </div>
       <div class="header-right">
         <label>View Client:</label>
@@ -348,16 +410,16 @@
         <p class="metric-value" id="activeCount">7</p>
       </div>
       <div class="metric-card">
-        <p class="metric-label">Projected Value</p>
-        <p class="metric-value" id="projectedValue">£2.1M</p>
+        <p class="metric-label">Total Value Added</p>
+        <p class="metric-value" id="totalValueAdded">£2.1M</p>
       </div>
       <div class="metric-card">
-        <p class="metric-label">Value Realised</p>
-        <p class="metric-value" id="totalRealised">£856K</p>
+        <p class="metric-label">Total Cost Saved</p>
+        <p class="metric-value" id="totalCostSaved">£856K</p>
       </div>
       <div class="metric-card">
-        <p class="metric-label">Realisation %</p>
-        <p class="metric-value" id="realisationPct">41%</p>
+        <p class="metric-label">Avg Adoption</p>
+        <p class="metric-value" id="avgAdoption">71%</p>
       </div>
     </div>
 
@@ -366,6 +428,7 @@
       <button class="tab-btn active" onclick="switchTab('portfolio', this)">Portfolio View</button>
       <button class="tab-btn" onclick="switchTab('projects', this)">Projects</button>
       <button class="tab-btn" onclick="switchTab('capture', this)">Capture Data</button>
+      <button class="tab-btn" onclick="switchTab('import', this)">Import Feedback</button>
       <button class="tab-btn" onclick="switchTab('insights', this)">Insights</button>
     </div>
 
@@ -378,7 +441,7 @@
     <!-- Projects Tab -->
     <div id="projects" class="tab-content">
       <h2 style="font-size: 18px; font-weight: 600; margin: 0 0 1rem 0;">Manage Projects</h2>
-      <div style="background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.25rem;">
+      <div style="background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.25rem; margin-bottom: 2rem;">
         <div class="form-group">
           <label>Project Name</label>
           <input type="text" id="newProjectName" placeholder="E.g., Creative AI Studio">
@@ -421,21 +484,41 @@
           </select>
         </div>
         <div class="form-group">
-          <label>Value Category</label>
+          <label>Metric Type</label>
           <select id="valueCategory" onchange="updateValueForm()">
-            <option value="">-- Choose Category --</option>
-            <option value="Cost Savings">Cost Savings</option>
-            <option value="Time Savings">Time Savings</option>
-            <option value="Quality/Efficiency">Quality/Efficiency</option>
-            <option value="User Feedback">User Feedback (Qualitative)</option>
-            <option value="Capability Uplift">Capability Uplift</option>
+            <option value="">-- Choose Metric --</option>
+            <option value="value-added">Value Added (£)</option>
+            <option value="cost-saved">Cost Saved (£/month)</option>
+            <option value="user-feedback">User Feedback (1-5)</option>
+            <option value="adoption">Adoption Rate (%)</option>
           </select>
         </div>
         <div id="valueInputGroup" class="form-group">
-          <label id="valueLabel">Value Amount</label>
+          <label id="valueLabel">Amount</label>
           <input type="text" id="valueInput" placeholder="Enter value">
+          <div id="valueHint" style="font-size: 12px; color: #666; margin-top: 6px;"></div>
         </div>
-        <button class="btn btn-primary" onclick="recordValue()">Record Value</button>
+        <button class="btn btn-primary" onclick="recordValue()">Record Metric</button>
+      </div>
+    </div>
+
+    <!-- Import Feedback Tab -->
+    <div id="import" class="tab-content">
+      <h2 style="font-size: 18px; font-weight: 600; margin: 0 0 1rem 0;">Import & Translate User Feedback</h2>
+      <div style="background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.25rem;">
+        <p style="font-size: 13px; color: #666; margin-bottom: 1rem;">Paste user comments below. AI will analyze sentiment and convert to User Feedback rating for your project.</p>
+        <div class="form-group">
+          <label>Select Project</label>
+          <select id="importProject">
+            <option value="">-- Choose Project --</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Paste User Comments</label>
+          <textarea id="feedbackText" placeholder="E.g., 'The AI tool has saved us so much time. Team is very happy.' or 'Users struggling with interface need training.'"></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="analyzeAndImportFeedback()">🤖 Analyze & Import Feedback</button>
+        <div id="feedbackResults" style="margin-top: 1.5rem;"></div>
       </div>
     </div>
 
@@ -447,25 +530,66 @@
   </div>
 </div>
 
+<!-- Edit Project Modal -->
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Edit Project</h2>
+      <button class="close-btn" onclick="closeEditModal()">&times;</button>
+    </div>
+    <div class="form-group">
+      <label>Project Name</label>
+      <input type="text" id="editProjectName">
+    </div>
+    <div class="form-group">
+      <label>Client</label>
+      <select id="editProjectClient">
+        <option value="The Body Shop">The Body Shop</option>
+        <option value="Shaun Leane">Shaun Leane</option>
+      </select>
+    </div>
+    <div class="input-row">
+      <div class="form-group" style="margin: 0;">
+        <label>Target Value (£)</label>
+        <input type="number" id="editProjectValue">
+      </div>
+      <div class="form-group" style="margin: 0;">
+        <label>Status</label>
+        <select id="editProjectStatus">
+          <option>In Progress</option>
+          <option>Active</option>
+          <option>At Risk</option>
+          <option>Completed</option>
+        </select>
+      </div>
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <button class="btn btn-primary" onclick="saveProjectEdit()">Save Changes</button>
+      <button class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <script>
   const SAMPLE_DATA = {
     clients: ['The Body Shop', 'Shaun Leane'],
     projects: [
-      { id: 1, name: 'Creative AI Studio', client: 'The Body Shop', targetValue: 420000, status: 'In Progress', realized: 285000 },
-      { id: 2, name: 'Customer Support Automation', client: 'The Body Shop', targetValue: 350000, status: 'Active', realized: 245000 },
-      { id: 3, name: 'AI Translation Portal', client: 'The Body Shop', targetValue: 280000, status: 'At Risk', realized: 98000 },
-      { id: 4, name: 'HR Recruitment Automation', client: 'The Body Shop', targetValue: 320000, status: 'In Progress', realized: 192000 },
-      { id: 5, name: 'Hyper-Personalised Recommendations', client: 'The Body Shop', targetValue: 380000, status: 'Active', realized: 266000 },
-      { id: 6, name: 'AI Governance Framework', client: 'The Body Shop', targetValue: 180000, status: 'Active', realized: 126000 },
-      { id: 7, name: 'Copilot Enablement', client: 'The Body Shop', targetValue: 190000, status: 'In Progress', realized: 114000 },
-      { id: 8, name: 'Bespoke Product Designer AI', client: 'Shaun Leane', targetValue: 250000, status: 'In Progress', realized: 140000 },
-      { id: 9, name: 'Customer Experience Chatbot', client: 'Shaun Leane', targetValue: 180000, status: 'Active', realized: 135000 }
+      { id: 1, name: 'Creative AI Studio', client: 'The Body Shop', targetValue: 420000, status: 'In Progress', valueAdded: 285000, costSaved: 15000, userFeedback: 4, adoption: 87 },
+      { id: 2, name: 'Customer Support Automation', client: 'The Body Shop', targetValue: 350000, status: 'Active', valueAdded: 245000, costSaved: 12500, userFeedback: 4, adoption: 78 },
+      { id: 3, name: 'AI Translation Portal', client: 'The Body Shop', targetValue: 280000, status: 'At Risk', valueAdded: 98000, costSaved: 4000, userFeedback: 3, adoption: 45 },
+      { id: 4, name: 'HR Recruitment Automation', client: 'The Body Shop', targetValue: 320000, status: 'In Progress', valueAdded: 192000, costSaved: 8000, userFeedback: 3, adoption: 62 },
+      { id: 5, name: 'Hyper-Personalised Recommendations', client: 'The Body Shop', targetValue: 380000, status: 'Active', valueAdded: 266000, costSaved: 10000, userFeedback: 4, adoption: 81 },
+      { id: 6, name: 'AI Governance Framework', client: 'The Body Shop', targetValue: 180000, status: 'Active', valueAdded: 126000, costSaved: 6000, userFeedback: 3, adoption: 70 },
+      { id: 7, name: 'Copilot Enablement', client: 'The Body Shop', targetValue: 190000, status: 'In Progress', valueAdded: 114000, costSaved: 5500, userFeedback: 3, adoption: 58 },
+      { id: 8, name: 'Bespoke Product Designer AI', client: 'Shaun Leane', targetValue: 250000, status: 'In Progress', valueAdded: 140000, costSaved: 7000, userFeedback: 4, adoption: 72 },
+      { id: 9, name: 'Customer Experience Chatbot', client: 'Shaun Leane', targetValue: 180000, status: 'Active', valueAdded: 135000, costSaved: 6500, userFeedback: 4, adoption: 85 }
     ],
     values: []
   };
 
   let data = JSON.parse(localStorage.getItem('valueData')) || SAMPLE_DATA;
   let currentClient = localStorage.getItem('currentClient') || 'The Body Shop';
+  let editingProjectId = null;
 
   function switchClient(client) {
     currentClient = client;
@@ -474,6 +598,7 @@
     renderProjects();
     renderProjectsList();
     populateProjectDropdown();
+    populateImportDropdown();
     document.getElementById('clientSelector').value = client;
   }
 
@@ -493,10 +618,38 @@
     if (tab === 'projects') renderProjectsList();
   }
 
+  function getRatingClass(value, isPercentage = false) {
+    if (isPercentage) {
+      if (value >= 80) return 'great';
+      if (value >= 60) return 'good';
+      if (value >= 40) return 'average';
+      return 'problematic';
+    } else {
+      if (value >= 4) return 'great';
+      if (value >= 3) return 'good';
+      if (value >= 2) return 'average';
+      return 'problematic';
+    }
+  }
+
+  function getRatingText(value, isPercentage = false) {
+    if (isPercentage) {
+      if (value >= 80) return 'Great';
+      if (value >= 60) return 'Good';
+      if (value >= 40) return 'Average';
+      return 'Problematic';
+    } else {
+      if (value >= 4) return 'Great';
+      if (value >= 3) return 'Good';
+      if (value >= 2) return 'Average';
+      return 'Problematic';
+    }
+  }
+
   function renderProjects() {
     const projects = getFilteredProjects();
     const html = projects.map(p => {
-      const pct = Math.round((p.realized / p.targetValue) * 100);
+      const pct = Math.round((p.valueAdded / p.targetValue) * 100);
       let badgeClass = 'badge-info';
       if (p.status === 'Active') badgeClass = 'badge-success';
       else if (p.status === 'At Risk') badgeClass = 'badge-warning';
@@ -510,20 +663,35 @@
             </div>
             <span class="badge ${badgeClass}">${p.status}</span>
           </div>
-          <div class="project-metrics">
-            <div class="metric-row">
-              <p>Target Value</p>
-              <p class="value">£${(p.targetValue/1000).toFixed(0)}K</p>
-            </div>
-            <div class="metric-row">
-              <p>Realised</p>
-              <p class="value success">£${(p.realized/1000).toFixed(0)}K (${pct}%)</p>
-            </div>
-          </div>
+          
           <div class="progress-bar">
             <div class="progress-fill" style="width: ${pct}%;"></div>
           </div>
-          <p class="project-footer">Status: ${pct}% of target realized</p>
+          
+          <div class="metrics-row">
+            <div class="metric-field ${getRatingClass(pct, true)}">
+              <div class="metric-field-label">Value Added</div>
+              <p class="metric-field-value">£${(p.valueAdded/1000).toFixed(0)}K</p>
+              <div style="font-size: 11px; color: #666; margin-top: 4px;">${pct}%</div>
+            </div>
+            <div class="metric-field ${getRatingClass(p.costSaved / 500, true)}">
+              <div class="metric-field-label">Cost Saved</div>
+              <p class="metric-field-value">£${p.costSaved/1000}K/m</p>
+              <div style="font-size: 11px; color: #666; margin-top: 4px;">${getRatingText(p.costSaved / 500, true)}</div>
+            </div>
+            <div class="metric-field ${getRatingClass(p.userFeedback)}">
+              <div class="metric-field-label">User Feedback</div>
+              <p class="metric-field-value">${p.userFeedback}/5</p>
+              <div style="font-size: 11px; color: #666; margin-top: 4px;">${getRatingText(p.userFeedback)}</div>
+            </div>
+            <div class="metric-field ${getRatingClass(p.adoption, true)}">
+              <div class="metric-field-label">Adoption</div>
+              <p class="metric-field-value">${p.adoption}%</p>
+              <div style="font-size: 11px; color: #666; margin-top: 4px;">${getRatingText(p.adoption, true)}</div>
+            </div>
+          </div>
+          
+          <p class="project-footer">Target: £${(p.targetValue/1000).toFixed(0)}K | Last updated: Today</p>
         </div>
       `;
     }).join('');
@@ -533,7 +701,7 @@
   function renderProjectsList() {
     const projects = getFilteredProjects();
     const html = projects.map(p => {
-      const pct = Math.round((p.realized / p.targetValue) * 100);
+      const pct = Math.round((p.valueAdded / p.targetValue) * 100);
       return `
         <div class="project-card">
           <div class="project-header">
@@ -543,9 +711,9 @@
             </div>
             <span class="badge badge-info">${p.status}</span>
           </div>
-          <p style="font-size: 13px; color: #666; margin: 0;">£${(p.targetValue/1000).toFixed(0)}K target | ${pct}% realized</p>
+          <p style="font-size: 13px; color: #666; margin: 0 0 1rem 0;">£${(p.targetValue/1000).toFixed(0)}K target | ${pct}% value added</p>
           <div class="action-buttons">
-            <button class="btn btn-small" onclick="editProject(${p.id})">Edit</button>
+            <button class="btn btn-small" onclick="openEditModal(${p.id})">Edit</button>
             <button class="btn btn-small btn-danger" onclick="deleteProject(${p.id})">Delete</button>
           </div>
         </div>
@@ -554,15 +722,50 @@
     document.getElementById('projectsList2').innerHTML = html || '<p style="color: #999; text-align: center; padding: 2rem;">No projects for this client yet.</p>';
   }
 
+  function openEditModal(projectId) {
+    const project = data.projects.find(p => p.id === projectId);
+    if (!project) return;
+    
+    editingProjectId = projectId;
+    document.getElementById('editProjectName').value = project.name;
+    document.getElementById('editProjectClient').value = project.client;
+    document.getElementById('editProjectValue').value = project.targetValue;
+    document.getElementById('editProjectStatus').value = project.status;
+    document.getElementById('editModal').classList.add('active');
+  }
+
+  function closeEditModal() {
+    document.getElementById('editModal').classList.remove('active');
+    editingProjectId = null;
+  }
+
+  function saveProjectEdit() {
+    const project = data.projects.find(p => p.id === editingProjectId);
+    if (!project) return;
+    
+    project.name = document.getElementById('editProjectName').value;
+    project.client = document.getElementById('editProjectClient').value;
+    project.targetValue = parseInt(document.getElementById('editProjectValue').value);
+    project.status = document.getElementById('editProjectStatus').value;
+    
+    localStorage.setItem('valueData', JSON.stringify(data));
+    updateMetrics();
+    renderProjects();
+    renderProjectsList();
+    closeEditModal();
+    alert('✓ Project updated!');
+  }
+
   function updateMetrics() {
     const projects = getFilteredProjects();
-    const totalRealized = projects.reduce((sum, p) => sum + p.realized, 0);
-    const totalTarget = projects.reduce((sum, p) => sum + p.targetValue, 0);
-    const pct = totalTarget > 0 ? Math.round((totalRealized / totalTarget) * 100) : 0;
+    const totalValueAdded = projects.reduce((sum, p) => sum + p.valueAdded, 0);
+    const totalCostSaved = projects.reduce((sum, p) => sum + p.costSaved, 0);
+    const avgAdoption = projects.length > 0 ? Math.round(projects.reduce((sum, p) => sum + p.adoption, 0) / projects.length) : 0;
+    
     document.getElementById('activeCount').textContent = projects.length;
-    document.getElementById('projectedValue').textContent = '£' + (totalTarget / 1000000).toFixed(1) + 'M';
-    document.getElementById('totalRealised').textContent = '£' + (totalRealized / 1000).toFixed(0) + 'K';
-    document.getElementById('realisationPct').textContent = pct + '%';
+    document.getElementById('totalValueAdded').textContent = '£' + (totalValueAdded / 1000000).toFixed(1) + 'M';
+    document.getElementById('totalCostSaved').textContent = '£' + (totalCostSaved / 1000).toFixed(0) + 'K';
+    document.getElementById('avgAdoption').textContent = avgAdoption + '%';
   }
 
   function populateProjectDropdown() {
@@ -572,25 +775,38 @@
       projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
   }
 
+  function populateImportDropdown() {
+    const select = document.getElementById('importProject');
+    const projects = getFilteredProjects();
+    select.innerHTML = '<option value="">-- Choose Project --</option>' + 
+      projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+  }
+
   function updateValueForm() {
     const category = document.getElementById('valueCategory').value;
     const label = document.getElementById('valueLabel');
-    if (category === 'Cost Savings') {
-      label.textContent = 'Cost Savings (£/month)';
-      document.getElementById('valueInput').placeholder = 'E.g., 2500';
+    const hint = document.getElementById('valueHint');
+    
+    if (category === 'value-added') {
+      label.textContent = 'Value Added (£)';
+      document.getElementById('valueInput').placeholder = 'E.g., 50000';
       document.getElementById('valueInput').type = 'number';
-    } else if (category === 'Time Savings') {
-      label.textContent = 'Time Saved (hours/week)';
-      document.getElementById('valueInput').placeholder = 'E.g., 8';
+      hint.textContent = 'Total value generated by this project';
+    } else if (category === 'cost-saved') {
+      label.textContent = 'Cost Saved (£ per month)';
+      document.getElementById('valueInput').placeholder = 'E.g., 5000';
       document.getElementById('valueInput').type = 'number';
-    } else if (category === 'User Feedback') {
-      label.textContent = 'Feedback';
-      document.getElementById('valueInput').placeholder = 'What did users say?';
-      document.getElementById('valueInput').type = 'text';
-    } else {
-      label.textContent = 'Value Amount/Description';
-      document.getElementById('valueInput').placeholder = 'Enter details';
-      document.getElementById('valueInput').type = 'text';
+      hint.textContent = 'Monthly cost savings from automation or efficiency';
+    } else if (category === 'user-feedback') {
+      label.textContent = 'User Feedback (1-5)';
+      document.getElementById('valueInput').placeholder = 'E.g., 4';
+      document.getElementById('valueInput').type = 'number';
+      hint.textContent = '1=Poor, 5=Excellent. How happy are users with this solution?';
+    } else if (category === 'adoption') {
+      label.textContent = 'Adoption Rate (%)';
+      document.getElementById('valueInput').placeholder = 'E.g., 85';
+      document.getElementById('valueInput').type = 'number';
+      hint.textContent = '% of target users actively using the solution';
     }
   }
 
@@ -605,15 +821,16 @@
     }
 
     const project = data.projects.find(p => p.id === projectId);
-    if (category !== 'User Feedback' && category !== 'Capability Uplift') {
-      const amount = parseFloat(value);
-      if (category === 'Cost Savings') {
-        project.realized += amount * 12;
-      } else if (category === 'Time Savings') {
-        project.realized += amount * 500;
-      } else {
-        project.realized += amount;
-      }
+    const numValue = parseFloat(value);
+    
+    if (category === 'value-added') {
+      project.valueAdded = numValue;
+    } else if (category === 'cost-saved') {
+      project.costSaved = numValue;
+    } else if (category === 'user-feedback') {
+      project.userFeedback = Math.min(5, Math.max(1, numValue));
+    } else if (category === 'adoption') {
+      project.adoption = Math.min(100, Math.max(0, numValue));
     }
 
     data.values.push({ projectId, category, value, date: new Date().toLocaleDateString() });
@@ -621,11 +838,51 @@
     
     updateMetrics();
     renderProjects();
-    populateProjectDropdown();
     document.getElementById('valueProject').value = '';
     document.getElementById('valueCategory').value = '';
     document.getElementById('valueInput').value = '';
-    alert('✓ Value recorded!');
+    alert('✓ Metric recorded!');
+  }
+
+  function analyzeAndImportFeedback() {
+    const projectId = parseInt(document.getElementById('importProject').value);
+    const feedbackText = document.getElementById('feedbackText').value;
+
+    if (!projectId || !feedbackText) {
+      alert('Please select a project and enter feedback');
+      return;
+    }
+
+    const project = data.projects.find(p => p.id === projectId);
+    const text = feedbackText.toLowerCase();
+    
+    // User Feedback Analysis
+    let userFeedbackScore = 3;
+    if (text.includes('very happy') || text.includes('excellent') || text.includes('love') || text.includes('amazing')) userFeedbackScore = 5;
+    else if (text.includes('happy') || text.includes('good') || text.includes('great') || text.includes('satisfied')) userFeedbackScore = 4;
+    else if (text.includes('struggling') || text.includes('difficult') || text.includes('confused') || text.includes('issues')) userFeedbackScore = 2;
+    else if (text.includes('broken') || text.includes('terrible') || text.includes('hate') || text.includes('poor')) userFeedbackScore = 1;
+    
+    project.userFeedback = userFeedbackScore;
+    
+    localStorage.setItem('valueData', JSON.stringify(data));
+    updateMetrics();
+    renderProjects();
+    
+    // Show results
+    const resultsHtml = `
+      <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 1rem;">
+        <h3 style="color: #16a34a; margin: 0 0 1rem 0;">✓ Analysis Complete!</h3>
+        <p style="margin: 0 0 1rem 0;">User Feedback analyzed for <strong>${project.name}</strong>:</p>
+        <div style="background: white; padding: 12px; border-radius: 4px; border-left: 3px solid #16a34a;">
+          <div style="font-size: 11px; color: #666; font-weight: 600; margin-bottom: 4px;">USER FEEDBACK</div>
+          <div style="font-size: 20px; font-weight: 600; color: #16a34a;">${userFeedbackScore}/5</div>
+          <div style="font-size: 12px; color: #666; margin-top: 4px;">${getRatingText(userFeedbackScore)}</div>
+        </div>
+      </div>
+    `;
+    document.getElementById('feedbackResults').innerHTML = resultsHtml;
+    document.getElementById('feedbackText').value = '';
   }
 
   function createProject() {
@@ -641,7 +898,8 @@
 
     const newProject = {
       id: Math.max(...data.projects.map(p => p.id), 0) + 1,
-      name, client, targetValue: target, status, realized: 0
+      name, client, targetValue: target, status,
+      valueAdded: 0, costSaved: 0, userFeedback: 3, adoption: 50
     };
     data.projects.push(newProject);
     localStorage.setItem('valueData', JSON.stringify(data));
@@ -650,6 +908,7 @@
     renderProjects();
     renderProjectsList();
     populateProjectDropdown();
+    populateImportDropdown();
     document.getElementById('newProjectName').value = '';
     document.getElementById('newProjectValue').value = '';
     document.getElementById('newProjectStatus').value = 'In Progress';
@@ -664,12 +923,9 @@
       renderProjects();
       renderProjectsList();
       populateProjectDropdown();
+      populateImportDropdown();
       alert('✓ Project deleted');
     }
-  }
-
-  function editProject(id) {
-    alert('Edit feature coming soon. For now, delete and recreate the project with updated details.');
   }
 
   function renderInsights() {
@@ -679,16 +935,34 @@
       return;
     }
     
-    const fastest = projects.reduce((a, b) => 
-      (a.realized / a.targetValue) > (b.realized / b.targetValue) ? a : b
+    const topValue = projects.reduce((a, b) => 
+      (a.valueAdded / a.targetValue) > (b.valueAdded / b.targetValue) ? a : b
     );
-    const atRisk = projects.filter(p => (p.realized / p.targetValue) < 0.5 && p.status !== 'Completed');
-    const avgPct = Math.round(projects.reduce((sum, p) => sum + (p.realized/p.targetValue)*100, 0) / projects.length);
+    const topCostSaver = projects.reduce((a, b) => a.costSaved > b.costSaved ? a : b);
+    const happiestUsers = projects.reduce((a, b) => a.userFeedback > b.userFeedback ? a : b);
+    const bestAdoption = projects.reduce((a, b) => a.adoption > b.adoption ? a : b);
+    const atRisk = projects.filter(p => (p.valueAdded / p.targetValue) < 0.5 && p.status !== 'Completed');
+    const avgValuePct = Math.round(projects.reduce((sum, p) => sum + (p.valueAdded/p.targetValue)*100, 0) / projects.length);
     
     let html = `
       <div class="insight-card">
-        <h3 class="insight-title">🏆 Fastest Value Realization</h3>
-        <p class="insight-text"><strong>${fastest.name}</strong> achieved ${Math.round((fastest.realized/fastest.targetValue)*100)}% of target value — your quickest win.</p>
+        <h3 class="insight-title">🏆 Highest Value Added</h3>
+        <p class="insight-text"><strong>${topValue.name}</strong> has added £${(topValue.valueAdded/1000).toFixed(0)}K (${Math.round((topValue.valueAdded/topValue.targetValue)*100)}% of target).</p>
+      </div>
+      
+      <div class="insight-card">
+        <h3 class="insight-title">💰 Biggest Cost Saver</h3>
+        <p class="insight-text"><strong>${topCostSaver.name}</strong> is saving £${topCostSaver.costSaved}K per month in operational costs.</p>
+      </div>
+      
+      <div class="insight-card">
+        <h3 class="insight-title">😊 Happiest Users</h3>
+        <p class="insight-text"><strong>${happiestUsers.name}</strong> has the highest user satisfaction rating (${happiestUsers.userFeedback}/5).</p>
+      </div>
+      
+      <div class="insight-card">
+        <h3 class="insight-title">📈 Highest Adoption</h3>
+        <p class="insight-text"><strong>${bestAdoption.name}</strong> has achieved ${bestAdoption.adoption}% user adoption — strong engagement.</p>
       </div>
     `;
     
@@ -696,16 +970,17 @@
       html += `
         <div class="insight-card">
           <h3 class="insight-title">⚠️ At-Risk Projects (${atRisk.length})</h3>
-          <p class="insight-text">${atRisk.map(p => '<strong>' + p.name + '</strong>').join(', ')} below 50% realization. Recommend: stakeholder alignment review, adoption acceleration plan.</p>
+          <p class="insight-text">${atRisk.map(p => '<strong>' + p.name + '</strong>').join(', ')} below 50% value realization. Recommend: stakeholder alignment review, adoption acceleration.</p>
         </div>
       `;
     }
     
     html += `
       <div class="insight-card">
-        <h3 class="insight-title">📊 Portfolio Patterns</h3>
-        <p class="insight-text">Average project realization: <strong>${avgPct}%</strong>. Projects with dedicated benefit owners typically achieve 65%+ realization vs 40% without.</p>
+        <h3 class="insight-title">📊 Portfolio Performance</h3>
+        <p class="insight-text">Average value realization: <strong>${avgValuePct}%</strong>. Projects with strong user feedback (4+) and high adoption (70%+) achieve better ROI.</p>
       </div>
+      
       <div class="insight-card">
         <h3 class="insight-title">💾 Data & Export</h3>
         <p class="insight-text">All data is saved locally in your browser. <button class="btn btn-small" onclick="downloadData()">Download as JSON</button> <button class="btn btn-small" onclick="clearAllData()">Reset All Data</button></p>
@@ -736,9 +1011,12 @@
     }
   }
 
+  // Initialize
   renderProjects();
   updateMetrics();
   populateProjectDropdown();
+  populateImportDropdown();
+  document.getElementById('clientSelector').value = currentClient;
 </script>
 </body>
 </html>
