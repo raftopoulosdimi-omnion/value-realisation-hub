@@ -471,7 +471,6 @@
   </div>
 
   <div class="container">
-    <!-- Portfolio Summary -->
     <div class="metrics-grid" id="metrics">
       <div class="metric-card">
         <p class="metric-label">Active Projects</p>
@@ -482,7 +481,7 @@
         <p class="metric-value" id="totalValueAdded">£2.1M</p>
       </div>
       <div class="metric-card">
-        <p class="metric-label">Total Cost Saved</p>
+        <p class="metric-label">Total Cost Saved (2026)</p>
         <p class="metric-value" id="totalCostSaved">£856K</p>
       </div>
       <div class="metric-card">
@@ -491,7 +490,6 @@
       </div>
     </div>
 
-    <!-- Tabs -->
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('portfolio', this)">Portfolio View</button>
       <button class="tab-btn" onclick="switchTab('projects', this)">Projects</button>
@@ -500,13 +498,11 @@
       <button class="tab-btn" onclick="switchTab('insights', this)">Insights</button>
     </div>
 
-    <!-- Portfolio View -->
     <div id="portfolio" class="tab-content active">
       <h2 style="font-size: 18px; font-weight: 600; margin: 0 0 1rem 0;">Projects Overview</h2>
       <div id="projectsList"></div>
     </div>
 
-    <!-- Projects Tab -->
     <div id="projects" class="tab-content">
       <h2 style="font-size: 18px; font-weight: 600; margin: 0 0 1rem 0;">Manage Projects</h2>
       <div style="background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.25rem; margin-bottom: 2rem;">
@@ -523,10 +519,6 @@
         </div>
         <div class="input-row">
           <div class="form-group" style="margin: 0;">
-            <label>Target Value (£)</label>
-            <input type="number" id="newProjectValue" placeholder="100000">
-          </div>
-          <div class="form-group" style="margin: 0;">
             <label>Status</label>
             <select id="newProjectStatus">
               <option>In Progress</option>
@@ -541,7 +533,6 @@
       <div id="projectsList2" style="margin-top: 2rem;"></div>
     </div>
 
-    <!-- Capture Data Tab -->
     <div id="capture" class="tab-content">
       <h2 style="font-size: 18px; font-weight: 600; margin: 0 0 1rem 0;">Capture Value Data</h2>
       <div style="background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.25rem;">
@@ -570,7 +561,6 @@
       </div>
     </div>
 
-    <!-- Feedback Index Tab -->
     <div id="feedback" class="tab-content">
       <h2 style="font-size: 18px; font-weight: 600; margin: 0 0 1rem 0;">Feedback Index</h2>
       <div style="background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.25rem; margin-bottom: 2rem;">
@@ -608,7 +598,6 @@
       <div id="feedbackList"></div>
     </div>
 
-    <!-- Insights Tab -->
     <div id="insights" class="tab-content">
       <h2 style="font-size: 18px; font-weight: 600; margin: 0 0 1rem 0;">Value Insights</h2>
       <div id="insightsList"></div>
@@ -616,7 +605,6 @@
   </div>
 </div>
 
-<!-- Edit Project Modal -->
 <div id="editModal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
@@ -634,20 +622,14 @@
         <option value="Shaun Leane">Shaun Leane</option>
       </select>
     </div>
-    <div class="input-row">
-      <div class="form-group" style="margin: 0;">
-        <label>Target Value (£)</label>
-        <input type="number" id="editProjectValue">
-      </div>
-      <div class="form-group" style="margin: 0;">
-        <label>Status</label>
-        <select id="editProjectStatus">
-          <option>In Progress</option>
-          <option>Active</option>
-          <option>At Risk</option>
-          <option>Completed</option>
-        </select>
-      </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select id="editProjectStatus">
+        <option>In Progress</option>
+        <option>Active</option>
+        <option>At Risk</option>
+        <option>Completed</option>
+      </select>
     </div>
     <div style="display: flex; gap: 8px;">
       <button class="btn btn-primary" onclick="saveProjectEdit()">Save Changes</button>
@@ -656,7 +638,6 @@
   </div>
 </div>
 
-<!-- View & Edit Metrics Modal -->
 <div id="metricsModal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
@@ -666,7 +647,7 @@
     
     <div class="project-info-box">
       <p><strong id="metricsProjectName">Project Name</strong></p>
-      <p>Target Value: <strong id="metricsTargetValue">£0K</strong> | Progress: <strong id="metricsProgress">0%</strong></p>
+      <p>Total Value (2026): <strong id="metricsTargetValue">£0K</strong></p>
     </div>
 
     <div class="form-group">
@@ -678,7 +659,7 @@
     <div class="form-group">
       <label>Cost Saved (£/month)</label>
       <input type="number" id="metricsCostSaved" placeholder="e.g., 15000">
-      <div style="font-size: 12px; color: #666; margin-top: 4px;">Monthly operational cost savings</div>
+      <div style="font-size: 12px; color: #666; margin-top: 4px;">Monthly operational cost savings (will be multiplied by remaining months in 2026)</div>
     </div>
 
     <div class="form-group">
@@ -704,20 +685,19 @@
   const SAMPLE_DATA = {
     clients: ['The Body Shop', 'Shaun Leane'],
     projects: [
-      { id: 1, name: 'Creative AI Studio', client: 'The Body Shop', targetValue: 420000, status: 'In Progress', valueAdded: 285000, costSaved: 15000, userFeedback: 4, adoption: 87 },
-      { id: 2, name: 'Customer Support Automation', client: 'The Body Shop', targetValue: 350000, status: 'Active', valueAdded: 245000, costSaved: 12500, userFeedback: 4, adoption: 78 },
-      { id: 3, name: 'AI Translation Portal', client: 'The Body Shop', targetValue: 280000, status: 'At Risk', valueAdded: 98000, costSaved: 4000, userFeedback: 3, adoption: 45 },
-      { id: 4, name: 'HR Recruitment Automation', client: 'The Body Shop', targetValue: 320000, status: 'In Progress', valueAdded: 192000, costSaved: 8000, userFeedback: 3, adoption: 62 },
-      { id: 5, name: 'Hyper-Personalised Recommendations', client: 'The Body Shop', targetValue: 380000, status: 'Active', valueAdded: 266000, costSaved: 10000, userFeedback: 4, adoption: 81 },
-      { id: 6, name: 'AI Governance Framework', client: 'The Body Shop', targetValue: 180000, status: 'Active', valueAdded: 126000, costSaved: 6000, userFeedback: 3, adoption: 70 },
-      { id: 7, name: 'Copilot Enablement', client: 'The Body Shop', targetValue: 190000, status: 'In Progress', valueAdded: 114000, costSaved: 5500, userFeedback: 3, adoption: 58 },
-      { id: 8, name: 'Bespoke Product Designer AI', client: 'Shaun Leane', targetValue: 250000, status: 'In Progress', valueAdded: 140000, costSaved: 7000, userFeedback: 4, adoption: 72 },
-      { id: 9, name: 'Customer Experience Chatbot', client: 'Shaun Leane', targetValue: 180000, status: 'Active', valueAdded: 135000, costSaved: 6500, userFeedback: 4, adoption: 85 }
+      { id: 1, name: 'Creative AI Studio', client: 'The Body Shop', status: 'In Progress', valueAdded: 285000, costSaved: 15000, userFeedback: 4, adoption: 87 },
+      { id: 2, name: 'Customer Support Automation', client: 'The Body Shop', status: 'Active', valueAdded: 245000, costSaved: 12500, userFeedback: 4, adoption: 78 },
+      { id: 3, name: 'AI Translation Portal', client: 'The Body Shop', status: 'At Risk', valueAdded: 98000, costSaved: 4000, userFeedback: 3, adoption: 45 },
+      { id: 4, name: 'HR Recruitment Automation', client: 'The Body Shop', status: 'In Progress', valueAdded: 192000, costSaved: 8000, userFeedback: 3, adoption: 62 },
+      { id: 5, name: 'Hyper-Personalised Recommendations', client: 'The Body Shop', status: 'Active', valueAdded: 266000, costSaved: 10000, userFeedback: 4, adoption: 81 },
+      { id: 6, name: 'AI Governance Framework', client: 'The Body Shop', status: 'Active', valueAdded: 126000, costSaved: 6000, userFeedback: 3, adoption: 70 },
+      { id: 7, name: 'Copilot Enablement', client: 'The Body Shop', status: 'In Progress', valueAdded: 114000, costSaved: 5500, userFeedback: 3, adoption: 58 },
+      { id: 8, name: 'Bespoke Product Designer AI', client: 'Shaun Leane', status: 'In Progress', valueAdded: 140000, costSaved: 7000, userFeedback: 4, adoption: 72 },
+      { id: 9, name: 'Customer Experience Chatbot', client: 'Shaun Leane', status: 'Active', valueAdded: 135000, costSaved: 6500, userFeedback: 4, adoption: 85 }
     ],
     feedback: []
   };
 
-  // Initialize data with migration logic and validation
   function initializeData() {
     let storedData = localStorage.getItem('valueData');
     let isValid = false;
@@ -725,11 +705,9 @@
     if (storedData) {
       try {
         const parsed = JSON.parse(storedData);
-        // Validate data structure
         if (parsed.projects && Array.isArray(parsed.projects) && parsed.projects.length > 0) {
           data = parsed;
           isValid = true;
-          // Ensure feedback array exists (for backward compatibility)
           if (!data.feedback) {
             data.feedback = [];
           }
@@ -740,18 +718,15 @@
       }
     }
     
-    // If no valid data found, use sample
     if (!isValid) {
       data = JSON.parse(JSON.stringify(SAMPLE_DATA));
     }
     
-    // Validate all projects have required properties
     if (data.projects && Array.isArray(data.projects)) {
       data.projects = data.projects.map(p => ({
         id: p.id || Math.random(),
         name: p.name || 'Unknown Project',
         client: p.client || 'Unknown Client',
-        targetValue: parseFloat(p.targetValue) || 0,
         status: p.status || 'In Progress',
         valueAdded: parseFloat(p.valueAdded) || 0,
         costSaved: parseFloat(p.costSaved) || 0,
@@ -760,12 +735,10 @@
       }));
     }
     
-    // Ensure feedback is array
     if (!data.feedback || !Array.isArray(data.feedback)) {
       data.feedback = [];
     }
     
-    // Save cleaned data
     localStorage.setItem('valueData', JSON.stringify(data));
   }
 
@@ -773,6 +746,11 @@
   let currentClient = localStorage.getItem('currentClient') || 'The Body Shop';
   let editingProjectId = null;
   let editingMetricsProjectId = null;
+
+  function getMonthsRemainingInYear() {
+    // Return 12 for full calendar year calculation
+    return 12;
+  }
 
   function switchClient(client) {
     currentClient = client;
@@ -833,8 +811,10 @@
 
   function renderProjects() {
     const projects = getFilteredProjects();
+    const monthsRemaining = getMonthsRemainingInYear();
     const html = projects.map(p => {
-      const pct = Math.round((p.valueAdded / p.targetValue) * 100);
+      const calculatedTarget = p.valueAdded + (p.costSaved * monthsRemaining);
+      
       let badgeClass = 'badge-info';
       if (p.status === 'Active') badgeClass = 'badge-success';
       else if (p.status === 'At Risk') badgeClass = 'badge-warning';
@@ -850,19 +830,19 @@
           </div>
           
           <div class="progress-bar">
-            <div class="progress-fill" style="width: ${pct}%;"></div>
+            <div class="progress-fill" style="width: 100%;"></div>
           </div>
           
           <div class="metrics-row">
-            <div class="metric-field ${getRatingClass(pct, true)}">
+            <div class="metric-field great">
               <div class="metric-field-label">Value Added</div>
               <p class="metric-field-value">£${(p.valueAdded/1000).toFixed(0)}K</p>
-              <div style="font-size: 11px; color: #666; margin-top: 4px;">${pct}%</div>
+              <div style="font-size: 11px; color: #666; margin-top: 4px;">Generated</div>
             </div>
-            <div class="metric-field ${getRatingClass(p.costSaved / 500, true)}">
-              <div class="metric-field-label">Cost Saved</div>
-              <p class="metric-field-value">£${p.costSaved/1000}K/m</p>
-              <div style="font-size: 11px; color: #666; margin-top: 4px;">${getRatingText(p.costSaved / 500, true)}</div>
+            <div class="metric-field great">
+              <div class="metric-field-label">Cost Saved (2026)</div>
+              <p class="metric-field-value">£${(p.costSaved*monthsRemaining/1000).toFixed(0)}K</p>
+              <div style="font-size: 11px; color: #666; margin-top: 4px;">£${p.costSaved}K/m × ${monthsRemaining}mo</div>
             </div>
             <div class="metric-field ${getRatingClass(p.userFeedback)}">
               <div class="metric-field-label">User Feedback</div>
@@ -876,7 +856,7 @@
             </div>
           </div>
           
-          <p class="project-footer">Target: £${(p.targetValue/1000).toFixed(0)}K | Feedback entries: ${data.feedback.filter(f => f.projectId === p.id).length}</p>
+          <p class="project-footer">Total Value (2026): £${(calculatedTarget/1000).toFixed(0)}K | Feedback entries: ${data.feedback.filter(f => f.projectId === p.id).length}</p>
         </div>
       `;
     }).join('');
@@ -885,8 +865,9 @@
 
   function renderProjectsList() {
     const projects = getFilteredProjects();
+    const monthsRemaining = getMonthsRemainingInYear();
     const html = projects.map(p => {
-      const pct = Math.round((p.valueAdded / p.targetValue) * 100);
+      const calculatedTarget = p.valueAdded + (p.costSaved * monthsRemaining);
       return `
         <div class="project-card">
           <div class="project-header">
@@ -896,7 +877,7 @@
             </div>
             <span class="badge badge-info">${p.status}</span>
           </div>
-          <p style="font-size: 13px; color: #666; margin: 0 0 1rem 0;">£${(p.targetValue/1000).toFixed(0)}K target | ${pct}% value added</p>
+          <p style="font-size: 13px; color: #666; margin: 0 0 1rem 0;">Total Value (2026): £${(calculatedTarget/1000).toFixed(0)}K | Value Added: £${(p.valueAdded/1000).toFixed(0)}K + Cost Saved: £${(p.costSaved*monthsRemaining/1000).toFixed(0)}K</p>
           <div class="action-buttons">
             <button class="btn btn-small" onclick="openMetricsModal(${p.id})">View & Edit Metrics</button>
             <button class="btn btn-small" onclick="openEditModal(${p.id})">Edit Project</button>
@@ -915,7 +896,6 @@
     editingProjectId = projectId;
     document.getElementById('editProjectName').value = project.name;
     document.getElementById('editProjectClient').value = project.client;
-    document.getElementById('editProjectValue').value = project.targetValue;
     document.getElementById('editProjectStatus').value = project.status;
     document.getElementById('editModal').classList.add('active');
   }
@@ -931,7 +911,6 @@
     
     project.name = document.getElementById('editProjectName').value;
     project.client = document.getElementById('editProjectClient').value;
-    project.targetValue = parseInt(document.getElementById('editProjectValue').value);
     project.status = document.getElementById('editProjectStatus').value;
     
     localStorage.setItem('valueData', JSON.stringify(data));
@@ -947,11 +926,11 @@
     if (!project) return;
     
     editingMetricsProjectId = projectId;
-    const pct = Math.round((project.valueAdded / project.targetValue) * 100);
+    const monthsRemaining = getMonthsRemainingInYear();
+    const calculatedTarget = project.valueAdded + (project.costSaved * monthsRemaining);
     
     document.getElementById('metricsProjectName').textContent = project.name;
-    document.getElementById('metricsTargetValue').textContent = '£' + (project.targetValue/1000).toFixed(0) + 'K';
-    document.getElementById('metricsProgress').textContent = pct + '%';
+    document.getElementById('metricsTargetValue').textContent = '£' + (calculatedTarget/1000).toFixed(0) + 'K';
     
     document.getElementById('metricsValueAdded').value = project.valueAdded;
     document.getElementById('metricsCostSaved').value = project.costSaved;
@@ -985,10 +964,10 @@
 
   function updateMetrics() {
     const projects = getFilteredProjects();
+    const monthsRemaining = getMonthsRemainingInYear();
     
-    // Safe calculation with guards against undefined/NaN
     let totalValueAdded = 0;
-    let totalCostSaved = 0;
+    let totalCostSavedInYear = 0;
     let totalAdoption = 0;
     
     if (projects && Array.isArray(projects)) {
@@ -997,8 +976,8 @@
         return sum + val;
       }, 0);
       
-      totalCostSaved = projects.reduce((sum, p) => {
-        const val = parseFloat(p.costSaved) || 0;
+      totalCostSavedInYear = projects.reduce((sum, p) => {
+        const val = (parseFloat(p.costSaved) || 0) * monthsRemaining;
         return sum + val;
       }, 0);
       
@@ -1008,16 +987,15 @@
       }, 0) / projects.length) : 0;
     }
     
-    const totalTarget = projects && Array.isArray(projects) ? projects.reduce((sum, p) => sum + (parseFloat(p.targetValue) || 0), 0) : 0;
+    const totalValue = totalValueAdded + totalCostSavedInYear;
     
-    // Format values safely
-    const valueAddedM = isNaN(totalValueAdded) ? '0.0' : (totalValueAdded / 1000000).toFixed(1);
-    const costSavedK = isNaN(totalCostSaved) ? '0' : (totalCostSaved / 1000).toFixed(0);
+    const totalValueM = isNaN(totalValue) ? '0.0' : (totalValue / 1000000).toFixed(1);
+    const totalCostSavedK = isNaN(totalCostSavedInYear) ? '0' : (totalCostSavedInYear / 1000).toFixed(0);
     const adoptionPct = isNaN(totalAdoption) ? '0' : totalAdoption;
     
     document.getElementById('activeCount').textContent = projects ? projects.length : 0;
-    document.getElementById('totalValueAdded').textContent = '£' + valueAddedM + 'M';
-    document.getElementById('totalCostSaved').textContent = '£' + costSavedK + 'K';
+    document.getElementById('totalValueAdded').textContent = '£' + totalValueM + 'M';
+    document.getElementById('totalCostSaved').textContent = '£' + totalCostSavedK + 'K';
     document.getElementById('avgAdoption').textContent = adoptionPct + '%';
   }
 
@@ -1063,9 +1041,7 @@
     }
   }
 
-  function updateFeedbackForm() {
-    // Form updates when project is selected
-  }
+  function updateFeedbackForm() {}
 
   function recordValue() {
     const projectId = parseInt(document.getElementById('valueProject').value);
@@ -1185,17 +1161,16 @@
   function createProject() {
     const name = document.getElementById('newProjectName').value;
     const client = document.getElementById('newProjectClient').value;
-    const target = parseInt(document.getElementById('newProjectValue').value);
     const status = document.getElementById('newProjectStatus').value;
 
-    if (!name || !client || !target) {
+    if (!name || !client) {
       alert('Please fill all fields');
       return;
     }
 
     const newProject = {
       id: Math.max(...data.projects.map(p => p.id), 0) + 1,
-      name, client, targetValue: target, status,
+      name, client, status,
       valueAdded: 0, costSaved: 0, userFeedback: 3, adoption: 50
     };
     data.projects.push(newProject);
@@ -1207,7 +1182,6 @@
     populateProjectDropdown();
     populateFeedbackDropdown();
     document.getElementById('newProjectName').value = '';
-    document.getElementById('newProjectValue').value = '';
     document.getElementById('newProjectStatus').value = 'In Progress';
     alert('✓ Project created!');
   }
@@ -1233,24 +1207,27 @@
       return;
     }
     
-    const topValue = projects.reduce((a, b) => 
-      (a.valueAdded / a.targetValue) > (b.valueAdded / b.targetValue) ? a : b
-    );
+    const monthsRemaining = getMonthsRemainingInYear();
+    const topValue = projects.reduce((a, b) => {
+      const aTotal = a.valueAdded + (a.costSaved * monthsRemaining);
+      const bTotal = b.valueAdded + (b.costSaved * monthsRemaining);
+      return aTotal > bTotal ? a : b;
+    });
     const topCostSaver = projects.reduce((a, b) => a.costSaved > b.costSaved ? a : b);
     const happiestUsers = projects.reduce((a, b) => a.userFeedback > b.userFeedback ? a : b);
     const bestAdoption = projects.reduce((a, b) => a.adoption > b.adoption ? a : b);
-    const atRisk = projects.filter(p => (p.valueAdded / p.targetValue) < 0.5 && p.status !== 'Completed');
-    const avgValuePct = Math.round(projects.reduce((sum, p) => sum + (p.valueAdded/p.targetValue)*100, 0) / projects.length);
+    
+    const topValueTotal = topValue.valueAdded + (topValue.costSaved * monthsRemaining);
     
     let html = `
       <div class="insight-card">
-        <h3 class="insight-title">🏆 Highest Value Added</h3>
-        <p class="insight-text"><strong>${topValue.name}</strong> has added £${(topValue.valueAdded/1000).toFixed(0)}K (${Math.round((topValue.valueAdded/topValue.targetValue)*100)}% of target).</p>
+        <h3 class="insight-title">🏆 Highest Total Value (2026)</h3>
+        <p class="insight-text"><strong>${topValue.name}</strong> has generated £${(topValueTotal/1000).toFixed(0)}K total value (£${(topValue.valueAdded/1000).toFixed(0)}K added + £${(topValue.costSaved*monthsRemaining/1000).toFixed(0)}K saved in 2026).</p>
       </div>
       
       <div class="insight-card">
         <h3 class="insight-title">💰 Biggest Cost Saver</h3>
-        <p class="insight-text"><strong>${topCostSaver.name}</strong> is saving £${topCostSaver.costSaved}K per month in operational costs.</p>
+        <p class="insight-text"><strong>${topCostSaver.name}</strong> is saving £${topCostSaver.costSaved}K per month (£${(topCostSaver.costSaved*monthsRemaining).toFixed(0)}K in 2026) in operational costs.</p>
       </div>
       
       <div class="insight-card">
@@ -1261,22 +1238,6 @@
       <div class="insight-card">
         <h3 class="insight-title">📈 Highest Adoption</h3>
         <p class="insight-text"><strong>${bestAdoption.name}</strong> has achieved ${bestAdoption.adoption}% user adoption — strong engagement.</p>
-      </div>
-    `;
-    
-    if (atRisk.length > 0) {
-      html += `
-        <div class="insight-card">
-          <h3 class="insight-title">⚠️ At-Risk Projects (${atRisk.length})</h3>
-          <p class="insight-text">${atRisk.map(p => '<strong>' + p.name + '</strong>').join(', ')} below 50% value realization. Recommend: stakeholder alignment review, adoption acceleration.</p>
-        </div>
-      `;
-    }
-    
-    html += `
-      <div class="insight-card">
-        <h3 class="insight-title">📊 Portfolio Performance</h3>
-        <p class="insight-text">Average value realization: <strong>${avgValuePct}%</strong>. Projects with strong user feedback (4+) and high adoption (70%+) achieve better ROI.</p>
       </div>
       
       <div class="insight-card">
@@ -1310,7 +1271,6 @@
     }
   }
 
-  // Initialize
   initializeData();
   renderProjects();
   updateMetrics();
