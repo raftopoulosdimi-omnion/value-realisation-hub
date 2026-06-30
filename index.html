@@ -656,27 +656,55 @@
     feedback: []
   };
 
-  // Initialize data with migration logic
+  // Initialize data with migration logic and validation
   function initializeData() {
     let storedData = localStorage.getItem('valueData');
+    let isValid = false;
     
     if (storedData) {
       try {
-        data = JSON.parse(storedData);
-        // Ensure feedback array exists (for backward compatibility)
-        if (!data.feedback) {
-          data.feedback = [];
+        const parsed = JSON.parse(storedData);
+        // Validate data structure
+        if (parsed.projects && Array.isArray(parsed.projects) && parsed.projects.length > 0) {
+          data = parsed;
+          isValid = true;
+          // Ensure feedback array exists (for backward compatibility)
+          if (!data.feedback) {
+            data.feedback = [];
+          }
         }
       } catch (e) {
-        console.error('Error parsing stored data, using sample:', e);
-        data = JSON.parse(JSON.stringify(SAMPLE_DATA));
+        console.error('Error parsing stored data:', e);
+        isValid = false;
       }
-    } else {
-      // First time - use sample data
+    }
+    
+    // If no valid data found, use sample
+    if (!isValid) {
       data = JSON.parse(JSON.stringify(SAMPLE_DATA));
     }
     
-    // Save to ensure structure is correct
+    // Validate all projects have required properties
+    if (data.projects && Array.isArray(data.projects)) {
+      data.projects = data.projects.map(p => ({
+        id: p.id || Math.random(),
+        name: p.name || 'Unknown Project',
+        client: p.client || 'Unknown Client',
+        targetValue: parseFloat(p.targetValue) || 0,
+        status: p.status || 'In Progress',
+        valueAdded: parseFloat(p.valueAdded) || 0,
+        costSaved: parseFloat(p.costSaved) || 0,
+        userFeedback: parseFloat(p.userFeedback) || 3,
+        adoption: parseFloat(p.adoption) || 50
+      }));
+    }
+    
+    // Ensure feedback is array
+    if (!data.feedback || !Array.isArray(data.feedback)) {
+      data.feedback = [];
+    }
+    
+    // Save cleaned data
     localStorage.setItem('valueData', JSON.stringify(data));
   }
 
@@ -853,14 +881,40 @@
 
   function updateMetrics() {
     const projects = getFilteredProjects();
-    const totalValueAdded = projects.reduce((sum, p) => sum + p.valueAdded, 0);
-    const totalCostSaved = projects.reduce((sum, p) => sum + p.costSaved, 0);
-    const avgAdoption = projects.length > 0 ? Math.round(projects.reduce((sum, p) => sum + p.adoption, 0) / projects.length) : 0;
     
-    document.getElementById('activeCount').textContent = projects.length;
-    document.getElementById('totalValueAdded').textContent = '£' + (totalValueAdded / 1000000).toFixed(1) + 'M';
-    document.getElementById('totalCostSaved').textContent = '£' + (totalCostSaved / 1000).toFixed(0) + 'K';
-    document.getElementById('avgAdoption').textContent = avgAdoption + '%';
+    // Safe calculation with guards against undefined/NaN
+    let totalValueAdded = 0;
+    let totalCostSaved = 0;
+    let totalAdoption = 0;
+    
+    if (projects && Array.isArray(projects)) {
+      totalValueAdded = projects.reduce((sum, p) => {
+        const val = parseFloat(p.valueAdded) || 0;
+        return sum + val;
+      }, 0);
+      
+      totalCostSaved = projects.reduce((sum, p) => {
+        const val = parseFloat(p.costSaved) || 0;
+        return sum + val;
+      }, 0);
+      
+      totalAdoption = projects.length > 0 ? Math.round(projects.reduce((sum, p) => {
+        const val = parseFloat(p.adoption) || 0;
+        return sum + val;
+      }, 0) / projects.length) : 0;
+    }
+    
+    const totalTarget = projects && Array.isArray(projects) ? projects.reduce((sum, p) => sum + (parseFloat(p.targetValue) || 0), 0) : 0;
+    
+    // Format values safely
+    const valueAddedM = isNaN(totalValueAdded) ? '0.0' : (totalValueAdded / 1000000).toFixed(1);
+    const costSavedK = isNaN(totalCostSaved) ? '0' : (totalCostSaved / 1000).toFixed(0);
+    const adoptionPct = isNaN(totalAdoption) ? '0' : totalAdoption;
+    
+    document.getElementById('activeCount').textContent = projects ? projects.length : 0;
+    document.getElementById('totalValueAdded').textContent = '£' + valueAddedM + 'M';
+    document.getElementById('totalCostSaved').textContent = '£' + costSavedK + 'K';
+    document.getElementById('avgAdoption').textContent = adoptionPct + '%';
   }
 
   function populateProjectDropdown() {
