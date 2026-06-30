@@ -322,7 +322,7 @@
       padding: 2rem;
       border-radius: 8px;
       width: 90%;
-      max-width: 500px;
+      max-width: 600px;
       max-height: 90vh;
       overflow-y: auto;
     }
@@ -361,6 +361,57 @@
       margin: 0; 
       color: #1a1a1a; 
       line-height: 1.5;
+    }
+    .feedback-entry {
+      background: #f9f9f9;
+      border-left: 3px solid #2563eb;
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+    .feedback-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .feedback-person {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+    .feedback-role {
+      font-size: 11px;
+      color: #666;
+      background: white;
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-left: 8px;
+    }
+    .feedback-date {
+      font-size: 11px;
+      color: #999;
+    }
+    .feedback-comment {
+      font-size: 13px;
+      color: #1a1a1a;
+      line-height: 1.4;
+      margin: 0;
+    }
+    .feedback-delete {
+      background: #fee2e2;
+      color: #991b1b;
+      border: none;
+      padding: 4px 8px;
+      font-size: 11px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .no-feedback {
+      text-align: center;
+      color: #999;
+      padding: 1rem;
+      font-size: 13px;
     }
     @media (max-width: 768px) {
       .input-row {
@@ -428,7 +479,7 @@
       <button class="tab-btn active" onclick="switchTab('portfolio', this)">Portfolio View</button>
       <button class="tab-btn" onclick="switchTab('projects', this)">Projects</button>
       <button class="tab-btn" onclick="switchTab('capture', this)">Capture Data</button>
-      <button class="tab-btn" onclick="switchTab('import', this)">Import Feedback</button>
+      <button class="tab-btn" onclick="switchTab('feedback', this)">Feedback Index</button>
       <button class="tab-btn" onclick="switchTab('insights', this)">Insights</button>
     </div>
 
@@ -502,24 +553,42 @@
       </div>
     </div>
 
-    <!-- Import Feedback Tab -->
-    <div id="import" class="tab-content">
-      <h2 style="font-size: 18px; font-weight: 600; margin: 0 0 1rem 0;">Import & Translate User Feedback</h2>
-      <div style="background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.25rem;">
-        <p style="font-size: 13px; color: #666; margin-bottom: 1rem;">Paste user comments below. AI will analyze sentiment and convert to User Feedback rating for your project.</p>
+    <!-- Feedback Index Tab -->
+    <div id="feedback" class="tab-content">
+      <h2 style="font-size: 18px; font-weight: 600; margin: 0 0 1rem 0;">Feedback Index</h2>
+      <div style="background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.25rem; margin-bottom: 2rem;">
+        <h3 style="font-size: 15px; font-weight: 600; margin: 0 0 1rem 0;">Add Feedback</h3>
         <div class="form-group">
           <label>Select Project</label>
-          <select id="importProject">
+          <select id="feedbackProject" onchange="updateFeedbackForm()">
             <option value="">-- Choose Project --</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>Paste User Comments</label>
-          <textarea id="feedbackText" placeholder="E.g., 'The AI tool has saved us so much time. Team is very happy.' or 'Users struggling with interface need training.'"></textarea>
+        <div class="input-row">
+          <div class="form-group" style="margin: 0;">
+            <label>Person Name</label>
+            <input type="text" id="feedbackPerson" placeholder="E.g., John Smith">
+          </div>
+          <div class="form-group" style="margin: 0;">
+            <label>Role</label>
+            <select id="feedbackRole">
+              <option value="User">User</option>
+              <option value="Team Lead">Team Lead</option>
+              <option value="Manager">Manager</option>
+              <option value="Director">Director</option>
+              <option value="Executive">Executive</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
         </div>
-        <button class="btn btn-primary" onclick="analyzeAndImportFeedback()">🤖 Analyze & Import Feedback</button>
-        <div id="feedbackResults" style="margin-top: 1.5rem;"></div>
+        <div class="form-group">
+          <label>Feedback Comment</label>
+          <textarea id="feedbackComment" placeholder="What did they say about this project?"></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="recordFeedback()">Add Feedback Entry</button>
       </div>
+      
+      <div id="feedbackList"></div>
     </div>
 
     <!-- Insights Tab -->
@@ -584,10 +653,34 @@
       { id: 8, name: 'Bespoke Product Designer AI', client: 'Shaun Leane', targetValue: 250000, status: 'In Progress', valueAdded: 140000, costSaved: 7000, userFeedback: 4, adoption: 72 },
       { id: 9, name: 'Customer Experience Chatbot', client: 'Shaun Leane', targetValue: 180000, status: 'Active', valueAdded: 135000, costSaved: 6500, userFeedback: 4, adoption: 85 }
     ],
-    values: []
+    feedback: []
   };
 
-  let data = JSON.parse(localStorage.getItem('valueData')) || SAMPLE_DATA;
+  // Initialize data with migration logic
+  function initializeData() {
+    let storedData = localStorage.getItem('valueData');
+    
+    if (storedData) {
+      try {
+        data = JSON.parse(storedData);
+        // Ensure feedback array exists (for backward compatibility)
+        if (!data.feedback) {
+          data.feedback = [];
+        }
+      } catch (e) {
+        console.error('Error parsing stored data, using sample:', e);
+        data = JSON.parse(JSON.stringify(SAMPLE_DATA));
+      }
+    } else {
+      // First time - use sample data
+      data = JSON.parse(JSON.stringify(SAMPLE_DATA));
+    }
+    
+    // Save to ensure structure is correct
+    localStorage.setItem('valueData', JSON.stringify(data));
+  }
+
+  let data;
   let currentClient = localStorage.getItem('currentClient') || 'The Body Shop';
   let editingProjectId = null;
 
@@ -598,7 +691,8 @@
     renderProjects();
     renderProjectsList();
     populateProjectDropdown();
-    populateImportDropdown();
+    populateFeedbackDropdown();
+    renderFeedbackIndex();
     document.getElementById('clientSelector').value = client;
   }
 
@@ -616,6 +710,7 @@
     btn.classList.add('active');
     if (tab === 'insights') renderInsights();
     if (tab === 'projects') renderProjectsList();
+    if (tab === 'feedback') renderFeedbackIndex();
   }
 
   function getRatingClass(value, isPercentage = false) {
@@ -691,7 +786,7 @@
             </div>
           </div>
           
-          <p class="project-footer">Target: £${(p.targetValue/1000).toFixed(0)}K | Last updated: Today</p>
+          <p class="project-footer">Target: £${(p.targetValue/1000).toFixed(0)}K | Feedback entries: ${data.feedback.filter(f => f.projectId === p.id).length}</p>
         </div>
       `;
     }).join('');
@@ -775,8 +870,8 @@
       projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
   }
 
-  function populateImportDropdown() {
-    const select = document.getElementById('importProject');
+  function populateFeedbackDropdown() {
+    const select = document.getElementById('feedbackProject');
     const projects = getFilteredProjects();
     select.innerHTML = '<option value="">-- Choose Project --</option>' + 
       projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
@@ -810,6 +905,10 @@
     }
   }
 
+  function updateFeedbackForm() {
+    // Form updates when project is selected
+  }
+
   function recordValue() {
     const projectId = parseInt(document.getElementById('valueProject').value);
     const category = document.getElementById('valueCategory').value;
@@ -833,7 +932,6 @@
       project.adoption = Math.min(100, Math.max(0, numValue));
     }
 
-    data.values.push({ projectId, category, value, date: new Date().toLocaleDateString() });
     localStorage.setItem('valueData', JSON.stringify(data));
     
     updateMetrics();
@@ -844,45 +942,86 @@
     alert('✓ Metric recorded!');
   }
 
-  function analyzeAndImportFeedback() {
-    const projectId = parseInt(document.getElementById('importProject').value);
-    const feedbackText = document.getElementById('feedbackText').value;
+  function recordFeedback() {
+    const projectId = parseInt(document.getElementById('feedbackProject').value);
+    const person = document.getElementById('feedbackPerson').value;
+    const role = document.getElementById('feedbackRole').value;
+    const comment = document.getElementById('feedbackComment').value;
 
-    if (!projectId || !feedbackText) {
-      alert('Please select a project and enter feedback');
+    if (!projectId || !person || !comment) {
+      alert('Please fill all fields (Project, Person Name, and Comment)');
       return;
     }
 
-    const project = data.projects.find(p => p.id === projectId);
-    const text = feedbackText.toLowerCase();
-    
-    // User Feedback Analysis
-    let userFeedbackScore = 3;
-    if (text.includes('very happy') || text.includes('excellent') || text.includes('love') || text.includes('amazing')) userFeedbackScore = 5;
-    else if (text.includes('happy') || text.includes('good') || text.includes('great') || text.includes('satisfied')) userFeedbackScore = 4;
-    else if (text.includes('struggling') || text.includes('difficult') || text.includes('confused') || text.includes('issues')) userFeedbackScore = 2;
-    else if (text.includes('broken') || text.includes('terrible') || text.includes('hate') || text.includes('poor')) userFeedbackScore = 1;
-    
-    project.userFeedback = userFeedbackScore;
-    
+    const feedbackEntry = {
+      id: Date.now(),
+      projectId,
+      person,
+      role,
+      comment,
+      date: new Date().toLocaleDateString()
+    };
+
+    data.feedback.push(feedbackEntry);
     localStorage.setItem('valueData', JSON.stringify(data));
-    updateMetrics();
-    renderProjects();
-    
-    // Show results
-    const resultsHtml = `
-      <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 1rem;">
-        <h3 style="color: #16a34a; margin: 0 0 1rem 0;">✓ Analysis Complete!</h3>
-        <p style="margin: 0 0 1rem 0;">User Feedback analyzed for <strong>${project.name}</strong>:</p>
-        <div style="background: white; padding: 12px; border-radius: 4px; border-left: 3px solid #16a34a;">
-          <div style="font-size: 11px; color: #666; font-weight: 600; margin-bottom: 4px;">USER FEEDBACK</div>
-          <div style="font-size: 20px; font-weight: 600; color: #16a34a;">${userFeedbackScore}/5</div>
-          <div style="font-size: 12px; color: #666; margin-top: 4px;">${getRatingText(userFeedbackScore)}</div>
+
+    renderFeedbackIndex();
+    document.getElementById('feedbackProject').value = '';
+    document.getElementById('feedbackPerson').value = '';
+    document.getElementById('feedbackRole').value = 'User';
+    document.getElementById('feedbackComment').value = '';
+    alert('✓ Feedback recorded!');
+  }
+
+  function deleteFeedback(feedbackId) {
+    if (confirm('Delete this feedback entry?')) {
+      data.feedback = data.feedback.filter(f => f.id !== feedbackId);
+      localStorage.setItem('valueData', JSON.stringify(data));
+      renderFeedbackIndex();
+      alert('✓ Feedback deleted');
+    }
+  }
+
+  function renderFeedbackIndex() {
+    const projects = getFilteredProjects();
+    let html = '';
+
+    projects.forEach(project => {
+      const projectFeedback = data.feedback.filter(f => f.projectId === project.id);
+      
+      html += `
+        <div class="insight-card">
+          <h3 class="insight-title">${project.name}</h3>
+          <div style="margin-top: 1rem;">
+      `;
+
+      if (projectFeedback.length === 0) {
+        html += '<div class="no-feedback">No feedback recorded yet</div>';
+      } else {
+        projectFeedback.forEach(entry => {
+          html += `
+            <div class="feedback-entry">
+              <div class="feedback-header">
+                <div>
+                  <span class="feedback-person">${entry.person}</span>
+                  <span class="feedback-role">${entry.role}</span>
+                  <span class="feedback-date">${entry.date}</span>
+                </div>
+                <button class="feedback-delete" onclick="deleteFeedback(${entry.id})">Delete</button>
+              </div>
+              <p class="feedback-comment">${entry.comment}</p>
+            </div>
+          `;
+        });
+      }
+
+      html += `
+          </div>
         </div>
-      </div>
-    `;
-    document.getElementById('feedbackResults').innerHTML = resultsHtml;
-    document.getElementById('feedbackText').value = '';
+      `;
+    });
+
+    document.getElementById('feedbackList').innerHTML = html || '<p style="color: #999; text-align: center; padding: 2rem;">No projects for this client.</p>';
   }
 
   function createProject() {
@@ -908,7 +1047,7 @@
     renderProjects();
     renderProjectsList();
     populateProjectDropdown();
-    populateImportDropdown();
+    populateFeedbackDropdown();
     document.getElementById('newProjectName').value = '';
     document.getElementById('newProjectValue').value = '';
     document.getElementById('newProjectStatus').value = 'In Progress';
@@ -918,12 +1057,13 @@
   function deleteProject(id) {
     if (confirm('Delete this project? This cannot be undone.')) {
       data.projects = data.projects.filter(p => p.id !== id);
+      data.feedback = data.feedback.filter(f => f.projectId !== id);
       localStorage.setItem('valueData', JSON.stringify(data));
       updateMetrics();
       renderProjects();
       renderProjectsList();
       populateProjectDropdown();
-      populateImportDropdown();
+      populateFeedbackDropdown();
       alert('✓ Project deleted');
     }
   }
@@ -983,7 +1123,7 @@
       
       <div class="insight-card">
         <h3 class="insight-title">💾 Data & Export</h3>
-        <p class="insight-text">All data is saved locally in your browser. <button class="btn btn-small" onclick="downloadData()">Download as JSON</button> <button class="btn btn-small" onclick="clearAllData()">Reset All Data</button></p>
+        <p class="insight-text">All data is saved locally in your browser and persists across updates. <button class="btn btn-small" onclick="downloadData()">Download as JSON</button> <button class="btn btn-small" onclick="clearAllData()">Reset All Data</button></p>
       </div>
     `;
     
@@ -1003,7 +1143,8 @@
   function clearAllData() {
     if (confirm('This will delete ALL data. Are you sure?')) {
       localStorage.removeItem('valueData');
-      data = SAMPLE_DATA;
+      data = JSON.parse(JSON.stringify(SAMPLE_DATA));
+      localStorage.setItem('valueData', JSON.stringify(data));
       updateMetrics();
       renderProjects();
       populateProjectDropdown();
@@ -1012,10 +1153,11 @@
   }
 
   // Initialize
+  initializeData();
   renderProjects();
   updateMetrics();
   populateProjectDropdown();
-  populateImportDropdown();
+  populateFeedbackDropdown();
   document.getElementById('clientSelector').value = currentClient;
 </script>
 </body>
